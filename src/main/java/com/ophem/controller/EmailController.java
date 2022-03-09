@@ -1,5 +1,8 @@
 package com.ophem.controller;
 
+
+import java.util.logging.Logger;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +15,8 @@ import com.ophem.services.EmailService;
 @Controller
 public class EmailController {
 	
+	Logger log = Logger.getLogger(EmailController.class.getName());
+	
 	@Autowired
 	EmailService emailservice;
 
@@ -22,7 +27,11 @@ public class EmailController {
 
 	@PostMapping("/sendmail")
 	public String sendMail(@ModelAttribute("mail") EmailDTO email) {
-		emailservice.sendmail(email.getEmail(), email.getSubject(), email.getMessage());
+		try {
+			emailservice.sendmail(email.getEmail(), email.getSubject(), email.getMessage());		
+		} catch (Exception e) {
+			log.info(">>>>>>>> Error occurred: " + e);
+		}
 		return "emailpage";
 	}
 	
